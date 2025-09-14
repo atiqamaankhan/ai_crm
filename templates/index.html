@@ -1,0 +1,23 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+{% block content %}
+<h3>Customers</h3>
+<table class="table table-striped">
+  <thead>
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Purchases</th><th>Last Activity</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    {% for c in customers %}
+      <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.phone }}</td>
+        <td>{{ "%.2f"|format(c.total_purchases) }}</td>
+        <td>{{ c.last_activity.strftime("%Y-%m-%d") if c.last_activity else "" }}</td>
+        <td><a class="btn btn-sm btn-primary" href="{{ url_for('customer_detail', cust_id=c.id) }}">View</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

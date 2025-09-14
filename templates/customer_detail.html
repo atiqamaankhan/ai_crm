@@ -1,0 +1,49 @@
+<!-- templates/customer_detail.html -->
+{% extends "base.html" %}
+{% block content %}
+<h3>Customer: {{ cust.name }}</h3>
+<ul>
+  <li>Email: {{ cust.email }}</li>
+  <li>Phone: {{ cust.phone }}</li>
+  <li>Total Purchases: {{ "%.2f"|format(cust.total_purchases) }}</li>
+  <li>Avg Session Time: {{ "%.2f"|format(cust.avg_session_time) }}</li>
+  <li>Last Activity: {{ cust.last_activity.strftime("%Y-%m-%d %H:%M:%S") if cust.last_activity }}</li>
+  <li>Notes: {{ cust.notes }}</li>
+</ul>
+
+{% if churn %}
+  <h4>Churn Prediction</h4>
+  <p>Predicted churn: <strong>{{ 'Yes' if churn.pred==1 else 'No' }}</strong></p>
+  <p>Probability: {{ "%.2f"|format(churn.prob if churn.prob else 0) }}</p>
+  <pre>{{ churn.features }}</pre>
+{% else %}
+  <p class="text-muted">Churn model not available.</p>
+{% endif %}
+
+<hr>
+<h4>Analyze Feedback Sentiment</h4>
+<form id="sent-form">
+  <div class="mb-3">
+    <textarea class="form-control" name="feedback" id="feedback" rows="3"></textarea>
+  </div>
+  <button id="analyze" class="btn btn-primary">Analyze Sentiment</button>
+</form>
+<div id="sent-result" class="mt-3"></div>
+
+<script>
+document.getElementById("analyze").addEventListener("click", function(e){
+  e.preventDefault();
+  const text = document.getElementById("feedback").value;
+  fetch("/analyze_sentiment", {
+    method: "POST",
+    headers: {"Content-Type":"application/x-www-form-urlencoded"},
+    body: "feedback_text=" + encodeURIComponent(text)
+  })
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById("sent-result").innerHTML = `<div class="alert alert-info">Sentiment: <strong>${data.sentiment}</strong> (polarity: ${data.polarity.toFixed(3)})</div>`;
+  })
+})
+</script>
+
+{% endblock %}
