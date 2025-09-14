@@ -1,0 +1,13 @@
+<!-- templates/add_customer.html -->
+{% extends "base.html" %}
+{% block content %}
+<h3>Add Customer</h3>
+<form method="post">
+  <div class="mb-3"><label class="form-label">Name</label><input class="form-control" name="name" required></div>
+  <div class="mb-3"><label class="form-label">Email</label><input class="form-control" name="email"></div>
+  <div class="mb-3"><label class="form-label">Phone</label><input class="form-control" name="phone"></div>
+  <div class="mb-3"><label class="form-label">Total Purchases</label><input class="form-control" name="total_purchases" type="number" step="0.01"></div>
+  <div class="mb-3"><label class="form-label">Avg Session Time (mins)</label><input class="form-control" name="avg_session_time" type="number" step="0.1"></div>
+  <button class="btn btn-success">Add</button>
+</form>
+{% endblock %}
